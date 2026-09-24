@@ -40,7 +40,6 @@ ranking and every guardrail happen in the browser from the files in this repo.
 | `docs/iteration_log.md` | Every failure observed and what changed because of it. |
 | `docs/prompts.md` | The two model prompts, verbatim. |
 | `docs/Marquee_AI_Design_Canvas.pdf` | The design canvas, one page. |
-| `deck/Marquee_backup_demo.mp4` | 45-second recorded walkthrough, in case the live demo will not cooperate. |
 
 
 ## Reproducing the numbers
