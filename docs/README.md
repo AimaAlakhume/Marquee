@@ -3,9 +3,8 @@
 An AI agent that turns a plain-sentence request into something to watch, built for the
 BrainStation AI Certification final project (Option 3: AI Agent).
 
-**What ships:** a Chrome extension that runs on top of the real Disney+. No backend, no API
-key, no network call at runtime. Parsing, retrieval, ranking and every guardrail happen in the
-browser from the files in this ZIP.
+**What ships:** a Chrome extension that runs on top of the real Disney+. No backend, and no model unless you choose to load one — it runs on your own machine when you do. Parsing, retrieval,
+ranking and every guardrail happen in the browser from the files in this repo.
 
 **Where a model is and is not involved** — worth reading before the rest:
 
