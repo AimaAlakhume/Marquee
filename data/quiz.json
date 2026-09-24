@@ -1,0 +1,325 @@
+{
+ "note": "For the times someone opens the panel with no sentence in mind. Every answer is a fragment of plain English appended to a query, so the quiz produces exactly the same kind of request a person would type — it goes through the same parser, the same retrieval and the same guardrails. Nothing here is a private code path. An empty value means 'no constraint'. The age answer is not decoration: it sets a certificate allow-list that runs before ranking, so a four-year-old is never offered a PG title. A chip with a 'requires' block only appears when an earlier answer allows it, which is how the quiz avoids offering a combination the catalogue cannot answer.",
+ "shared": [
+  {
+   "id": "look",
+   "q": "Animated or live-action?",
+   "chips": [
+    {
+     "label": "Animated",
+     "value": "animated"
+    },
+    {
+     "label": "Live-action",
+     "value": "live-action"
+    },
+    {
+     "label": "Either is fine",
+     "value": ""
+    }
+   ]
+  },
+  {
+   "id": "genre",
+   "q": "Anything in particular appeal right now?",
+   "chips": [
+    {
+     "label": "Comedy",
+     "value": "comedy"
+    },
+    {
+     "label": "Adventure",
+     "value": "adventure"
+    },
+    {
+     "label": "Romance",
+     "value": "romance"
+    },
+    {
+     "label": "Thriller",
+     "value": "thriller",
+     "requires": {
+      "look": [
+       "live-action",
+       ""
+      ]
+     }
+    },
+    {
+     "label": "Documentary",
+     "value": "documentary",
+     "requires": {
+      "look": [
+       "live-action",
+       ""
+      ]
+     }
+    },
+    {
+     "label": "Anime",
+     "value": "anime",
+     "requires": {
+      "look": [
+       "animated",
+       ""
+      ]
+     }
+    },
+    {
+     "label": "Not fussy",
+     "value": ""
+    }
+   ]
+  },
+  {
+   "id": "time",
+   "q": "How much time have you got?",
+   "chips": [
+    {
+     "label": "Just a few minutes",
+     "value": "shorts",
+     "requires": {
+      "look": [
+       "animated",
+       ""
+      ]
+     }
+    },
+    {
+     "label": "Under an hour",
+     "value": "under an hour"
+    },
+    {
+     "label": "About 90 minutes",
+     "value": "about 90 minutes"
+    },
+    {
+     "label": "A whole evening",
+     "value": "under 2 hours"
+    },
+    {
+     "label": "Enough to binge",
+     "value": "a series"
+    }
+   ]
+  }
+ ],
+ "by_persona": {
+  "solo": [
+   {
+    "id": "subs",
+    "q": "Up for reading subtitles tonight?",
+    "chips": [
+     {
+      "label": "Happy to",
+      "value": ""
+     },
+     {
+      "label": "Rather not",
+      "value": "no subtitles"
+     },
+     {
+      "label": "Doesn't matter",
+      "value": ""
+     }
+    ]
+   },
+   {
+    "id": "energy",
+    "q": "How much do you want it to ask of you?",
+    "chips": [
+     {
+      "label": "Not much",
+      "value": "comforting"
+     },
+     {
+      "label": "Grip me",
+      "value": "gripping"
+     },
+     {
+      "label": "Make me think",
+      "value": "thought-provoking"
+     }
+    ]
+   },
+   {
+    "id": "familiar",
+    "q": "Something new, or something you already know?",
+    "chips": [
+     {
+      "label": "Something new",
+      "value": "recent"
+     },
+     {
+      "label": "A comfort rewatch",
+      "value": "a rewatch"
+     },
+     {
+      "label": "Either",
+      "value": ""
+     }
+    ]
+   }
+  ],
+  "movie-night": [
+   {
+    "id": "subs",
+    "q": "Does anyone here not like subtitles?",
+    "chips": [
+     {
+      "label": "Yes — keep it in English",
+      "value": "no subtitles"
+     },
+     {
+      "label": "No, subtitles are fine",
+      "value": ""
+     }
+    ]
+   },
+   {
+    "id": "squeam",
+    "q": "Anyone squeamish?",
+    "chips": [
+     {
+      "label": "Keep it light",
+      "value": "nothing grim"
+     },
+     {
+      "label": "We can handle anything",
+      "value": ""
+     }
+    ]
+   },
+   {
+    "id": "settle",
+    "q": "What usually settles it in this house?",
+    "chips": [
+     {
+      "label": "Something everyone already loves",
+      "value": "a classic"
+     },
+     {
+      "label": "Something nobody has seen",
+      "value": "recent"
+     },
+     {
+      "label": "Whatever makes us laugh",
+      "value": "funny"
+     }
+    ]
+   }
+  ],
+  "date-night": [
+   {
+    "id": "mood",
+    "q": "What kind of evening is this?",
+    "chips": [
+     {
+      "label": "Easy and warm",
+      "value": "comforting"
+     },
+     {
+      "label": "A bit of tension",
+      "value": "gripping"
+     },
+     {
+      "label": "We want to cry",
+      "value": "emotional"
+     }
+    ]
+   },
+   {
+    "id": "limits",
+    "q": "Anything off the table?",
+    "chips": [
+     {
+      "label": "Nothing bleak",
+      "value": "nothing bleak"
+     },
+     {
+      "label": "Nothing three hours long",
+      "value": "under 2 hours"
+     },
+     {
+      "label": "We're open",
+      "value": ""
+     }
+    ]
+   },
+   {
+    "id": "attention",
+    "q": "Talking through it, or full attention?",
+    "chips": [
+     {
+      "label": "We'll be talking",
+      "value": "something on"
+     },
+     {
+      "label": "Full attention",
+      "value": ""
+     }
+    ]
+   }
+  ]
+ },
+ "kids_mode": [
+  {
+   "id": "age",
+   "q": "How young is the youngest?",
+   "chips": [
+    {
+     "label": "Under 5",
+     "value": "for under 5"
+    },
+    {
+     "label": "5 to 8",
+     "value": "for 5 to 8"
+    },
+    {
+     "label": "9 to 12",
+     "value": "for 9 to 12"
+    }
+   ]
+  },
+  {
+   "id": "into",
+   "q": "Anything they're into at the moment?",
+   "chips": [
+    {
+     "label": "Animals",
+     "value": "animals"
+    },
+    {
+     "label": "Adventure",
+     "value": "adventure"
+    },
+    {
+     "label": "Music",
+     "value": "great music"
+    },
+    {
+     "label": "Not fussy",
+     "value": ""
+    }
+   ]
+  },
+  {
+   "id": "avoid",
+   "q": "Anything to steer clear of?",
+   "chips": [
+    {
+     "label": "Nothing scary",
+     "value": "nothing scary"
+    },
+    {
+     "label": "Nothing sad",
+     "value": "nothing sad"
+    },
+    {
+     "label": "They're fine with anything",
+     "value": ""
+    }
+   ]
+  }
+ ]
+}

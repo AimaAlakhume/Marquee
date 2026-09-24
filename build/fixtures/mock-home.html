@@ -1,0 +1,83 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Mock streaming home</title>
+<style>
+ body{margin:0;background:#040a17;color:#fff;font-family:system-ui}
+ .topnav{position:fixed;top:0;left:0;right:0;height:92px;background:#0b1220;z-index:50;display:flex;align-items:center;justify-content:center}
+ .navitems{display:flex;gap:26px;overflow-x:auto}
+ .navitems a{display:flex;align-items:center;gap:8px;color:#fff;text-decoration:none;height:64px;padding:0 6px}
+ .navitems img{width:22px;height:22px;background:#2a3550}
+ .hero-carousel{height:560px;overflow:hidden;margin-top:92px}
+ .hero-slides{display:flex;overflow-x:auto;height:560px}
+ .hero-slide{flex:0 0 100%;height:560px;background:linear-gradient(90deg,#123,#012)}
+ body{font-family:"Trebuchet MS",Verdana,sans-serif}
+ .set-title,.alt-head{font-family:"Trebuchet MS",Verdana,sans-serif;letter-spacing:.02em}
+ .collection{padding:24px 40px}
+ .set-title{font-size:20px;font-weight:700;margin:0 0 12px}
+ .tiles{display:flex;gap:12px;overflow-x:auto}
+ .tile{flex:0 0 220px;height:124px;background:#1b2436;border-radius:6px;overflow:hidden}
+ .tile img{width:100%;height:100%;object-fit:cover;display:block}
+ /* a second shape: heading is a sibling of the scroller's grandparent */
+ .alt-wrap{padding:24px 40px}
+ .alt-head{font-size:20px;font-weight:700;margin:0 0 12px}
+ .alt-inner{}
+ ul.alt-list{display:flex;gap:12px;overflow-x:auto;list-style:none;margin:0;padding:0}
+ ul.alt-list li{flex:0 0 220px;height:124px;background:#1b2436;border-radius:6px}
+</style></head><body>
+<header class="topnav"><div class="navitems">
+  <a href="/home" aria-label="Home"><img alt="Home" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="><span>Home</span></a>
+  <a href="/live" aria-label="Live"><img alt="Live" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="><span>Live</span></a>
+  <a href="/watchlist" aria-label="Watchlist"><img alt="Watchlist" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="><span>Watchlist</span></a>
+  <a href="/movies" aria-label="Movies"><img alt="Movies" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="><span>Movies</span></a>
+  <a href="/series" aria-label="Series"><img alt="Series" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="><span>Series</span></a>
+  <a href="/originals" aria-label="Originals"><img alt="Originals" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="><span>Originals</span></a>
+</div></header>
+<div class="hero-carousel"><div class="hero-slides">
+  <div class="hero-slide"><a href="/browse/hero-1" aria-label="Featured 1"><img alt="Featured 1" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="></a></div>
+  <div class="hero-slide"><a href="/browse/hero-2" aria-label="Featured 2"><img alt="Featured 2" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="></a></div>
+  <div class="hero-slide"><a href="/browse/hero-3" aria-label="Featured 3"><img alt="Featured 3" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="></a></div>
+  <div class="hero-slide"><a href="/browse/hero-4" aria-label="Featured 4"><img alt="Featured 4" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciLz4="></a></div>
+</div></div>
+<script>
+ const IMG = "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="220" height="124"><rect width="220" height="124" fill="#2a3550"/></svg>');
+ const rows = [
+   ["Continue Watching", 6], ["Trending Now", 12], ["Recommended For You", 14],
+   ["Reality & Competition", 8], ["New to Disney+", 10],
+ ];
+ const shelf = document.createElement("section");
+ shelf.className = "all-rows";
+ document.body.appendChild(shelf);
+ rows.forEach(([title, n], idx) => {
+   const wrap = document.createElement("div");
+   if (idx % 2 === 0) {
+     wrap.className = "collection";
+     wrap.innerHTML = '<h2 class="set-title">' + title + '</h2><div class="tiles">' +
+       Array.from({length:n}, (_,i) =>
+         '<div class="tile"><a href="/browse/entity-' + idx + '-' + i + '" aria-label="' + title + ' item ' + (i+1) + '"><img alt="' + title + ' item ' + (i+1) + '" src="' + IMG + '"></a></div>').join("") + '</div>';
+   } else {
+     wrap.className = "alt-wrap";
+     wrap.innerHTML = '<div class="alt-head">' + title + '</div><div class="alt-inner"><ul class="alt-list">' +
+       Array.from({length:n}, (_,i) =>
+         '<li><a href="/video/xyz-' + idx + '-' + i + '" aria-label="' + title + ' item ' + (i+1) + '"><img alt="' + title + ' item ' + (i+1) + '" src="' + IMG + '"></a></li>').join("") + '</ul></div>';
+   }
+   shelf.appendChild(wrap);
+ });
+
+ // One row labelled the way the real host labels its tiles — title first, then
+ // metadata — so the link harvester is exercised, not just the shape scanner.
+ const REAL = [
+   ["The Jungle Book", "G", 1967, "Animation, Family"],
+   ["The Aristocats", "G", 1970, "Animation, Family"],
+   ["Winnie the Pooh", "G", 2011, "Animation, Family"],
+   ["Lilo & Stitch", "PG", 2002, "Animation, Comedy"],
+   ["Encanto", "PG", 2021, "Animation, Musicals"],
+ ];
+ const real = document.createElement("div");
+ real.className = "collection";
+ real.innerHTML = '<h2 class="set-title">Because you watched</h2><div class="tiles">' +
+   REAL.map(([t, cert, yr, g], i) =>
+     '<div class="tile"><a href="/browse/entity-real-' + i + '" aria-label="' + t +
+     ' Rated ' + cert + ' Released ' + yr + '. ' + g +
+     ' Select for details on this title."><img alt="" src="' + IMG + '"></a></div>').join("") +
+   '</div>';
+ shelf.appendChild(real);
+</script>
+</body></html>

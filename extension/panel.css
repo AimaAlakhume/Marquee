@@ -1,0 +1,230 @@
+/* ===========================================================================
+   Marquee — content-script styles.
+   Extension CSS is injected by the browser and is exempt from the host page's
+   Content-Security-Policy, which is why every style lives here rather than in
+   an inline style attribute. Dynamic values (the tone gradients) are set as
+   custom properties through the CSSOM, which CSP also permits.
+   Every selector is prefixed .mq- and every box resets what it inherits,
+   because the host page's global CSS is hostile to anything it did not author.
+   ========================================================================= */
+
+/* The blunt reset that protects us from the host page's global CSS. SVG subtrees
+   are excluded because `all` covers the SVG presentation properties too — `fill`,
+   `stroke`, and `d`, which is a real CSS property on a <path>. Reverting `d` to
+   `none` silently erases the shape, and CSS beats the attribute, so an icon drawn
+   with a path renders as nothing at all.
+   The exclusion is wrapped in :where() because :not() carries specificity, and
+   raising this selector above (0,1,0) makes the reset outrank the component
+   rules below it — which quietly flattens every chip and border in the panel.
+   :where() contributes nothing, so the balance is exactly as it was. */
+.mq-root, .mq-root *:where(:not(svg, svg *)),
+.mq-row,  .mq-row  *:where(:not(svg, svg *)) { all: revert; box-sizing: border-box; }
+
+.mq-root {
+  position: fixed; inset: 0 0 0 auto; width: min(440px, 100vw); z-index: 2147483000;
+  display: flex; flex-direction: column;
+  background: #141A24; color: #E8ECF3;
+  font-family: "IBM Plex Sans", system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 14px; line-height: 1.5;
+  border-left: 1px solid #28313F; box-shadow: -18px 0 44px -18px rgba(0,0,0,.85);
+  transform: translateX(100%); transition: transform .26s cubic-bezier(.32,.72,0,1);
+}
+.mq-root[data-open="true"] { transform: translateX(0); }
+
+.mq-fab {
+  position: fixed; right: 20px; bottom: 20px; z-index: 2147483000;
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 18px; border: 0; border-radius: 999px; cursor: pointer;
+  background: #FF7A3D; color: #120A06; font-weight: 600; font-size: 14px;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  box-shadow: 0 10px 30px -8px rgba(255,122,61,.55);
+}
+.mq-fab:hover { filter: brightness(1.07); }
+/* The reset gives every element `display: revert`, so the [hidden] attribute
+   alone would not beat .mq-fab's own display:flex. */
+.mq-fab[hidden] { display: none !important; }
+
+.mq-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid #28313F; }
+.mq-head h3 { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.mq-head > div:first-child { min-width: 0; }
+.mq-sub { font-size: 11px; color: #5E6A7D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mq-badge { white-space: nowrap; }
+.mq-head .mq-sub { font-size: 11px; color: #5E6A7D; }
+.mq-spacer { flex: 1; }
+.mq-badge { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9.5px;
+  letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border-radius: 3px;
+  border: 1px solid #28313F; color: #8E9AAD; }
+.mq-x { border: 0; background: none; color: #5E6A7D; font-size: 20px; cursor: pointer; padding: 0 4px; line-height: 1; }
+
+.mq-personas { position: relative; display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 10px 52px 10px 18px; border-bottom: 1px solid #28313F; background: #0C1017; }
+
+/* Pinned to the corner with padding reserved for it, so the chips wrap
+   underneath rather than colliding with it. */
+.mq-refresh { position: absolute; top: 8px; right: 14px; display: flex;
+  align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0;
+  border: 1px solid #28313F; border-radius: 7px; background: transparent;
+  color: #8E9AAD; cursor: pointer; transition: color .15s, border-color .15s, transform .25s; }
+.mq-refresh:hover { color: #E8ECF3; border-color: #3B4658; transform: rotate(-70deg); }
+.mq-refresh:active { transform: rotate(-160deg); }
+/* `all: revert` at the top of this file also resets SVG paint, and CSS beats
+   presentation attributes — so fill reverted to black and stroke to none, which
+   painted the icon as a small filled blob. Restate both with enough specificity
+   to win. */
+.mq-refresh svg { width: 15px; height: 15px; display: block; overflow: visible; }
+.mq-refresh svg, .mq-refresh svg * {
+  fill: none; stroke: currentColor; stroke-width: 2px;
+  stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: reduce) {
+  .mq-refresh, .mq-refresh:hover, .mq-refresh:active { transform: none; }
+}
+.mq-persona { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; cursor: pointer;
+  padding: 5px 10px; border: 1px solid #28313F; border-radius: 999px; background: transparent;
+  color: #8E9AAD; font-family: inherit; font-size: 12px; white-space: nowrap; transition: .15s; }
+.mq-persona:hover { color: #E8ECF3; border-color: #3B4658; }
+.mq-persona[aria-pressed="true"] { background: #1B222E; color: #E8ECF3; border-color: #3B4658; }
+.mq-kids { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; cursor: pointer;
+  padding: 5px 10px; border: 1px dashed #3B4658; border-radius: 999px; background: transparent;
+  color: #8E9AAD; font-family: inherit; font-size: 12px; white-space: nowrap; }
+.mq-kids:hover { color: #E8ECF3; }
+.mq-kids[aria-pressed="true"] { border-style: solid; border-color: #F0C36B;
+  background: rgba(240,195,107,.12); color: #F0C36B; }
+.mq-kids-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: #3B4658; }
+.mq-kids[aria-pressed="true"] .mq-kids-dot { background: #F0C36B; box-shadow: 0 0 8px #F0C36B; }
+
+.mq-dot { width: 12px; height: 12px; border-radius: 50%; flex: none;
+  background: linear-gradient(140deg, hsl(var(--h) 62% 58%), hsl(var(--h) 55% 38%)); }
+
+.mq-body { flex: 1; overflow-y: auto; padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+.mq-body > * { flex: 0 0 auto; }
+.mq-thread { display: flex; flex-direction: column; gap: 10px; }
+
+.mq-bubble { border-radius: 10px; padding: 11px 13px; font-size: 13.5px; line-height: 1.48; max-width: 94%; }
+.mq-bubble.user { background: #1B222E; align-self: flex-end; }
+.mq-bubble.agent { background: #0C1017; border: 1px solid #28313F; }
+.mq-bubble.notice { background: #3A2018; border: 1px solid rgba(255,122,61,.4); }
+.mq-bubble.stop { background: rgba(232,97,107,.14); border-color: rgba(232,97,107,.45); }
+.mq-lede { display: block; font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; color: #FF7A3D; margin-bottom: 5px; }
+.mq-bubble.stop .mq-lede { color: #E8616B; }
+
+.mq-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.mq-chip { border: 1px solid #28313F; background: #0C1017; color: #8E9AAD; border-radius: 999px;
+  padding: 7px 13px; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+.mq-chip:hover { border-color: #FF7A3D; color: #E8ECF3; }
+.mq-chip.primary { background: #3A2018; border-color: rgba(255,122,61,.45); color: #E8ECF3; }
+
+/* A fork in the road: nothing moves until one of these is pressed, so they
+   breathe rather than sit there looking like a setting that is already on.
+   A filled chip reads as "selected"; an outline that pulses reads as "press me". */
+.mq-awaiting .mq-chip { border-color: rgba(255,122,61,.5); color: #E8ECF3;
+  animation: mq-breathe 2.1s ease-in-out infinite; }
+.mq-awaiting .mq-chip:nth-child(2) { animation-delay: .45s; }
+.mq-awaiting .mq-chip:hover { animation: none; border-color: #FF7A3D;
+  background: #3A2018; box-shadow: 0 0 0 3px rgba(255,122,61,.18); }
+
+@keyframes mq-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,122,61,.38); border-color: rgba(255,122,61,.45); }
+  55%      { box-shadow: 0 0 0 6px rgba(255,122,61,0); border-color: #FF7A3D; }
+}
+
+/* Motion is the affordance, so when motion is unwelcome the ring stays put
+   rather than the cue disappearing entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .mq-awaiting .mq-chip { animation: none;
+    border-color: #FF7A3D; box-shadow: 0 0 0 3px rgba(255,122,61,.16); }
+}
+
+.mq-picks { display: flex; flex-direction: column; gap: 9px; }
+.mq-pick { display: grid; grid-template-columns: 44px 1fr; gap: 11px; align-items: start; text-align: left;
+  padding: 9px; border: 1px solid #28313F; border-radius: 8px; background: #0C1017; }
+.mq-thumb { aspect-ratio: 2/3; border-radius: 4px; overflow: hidden; position: relative;
+  background: linear-gradient(var(--mq-angle, 140deg), var(--mq-g1, #333), var(--mq-g2, #111)); }
+.mq-pick .t { font-size: 13px; font-weight: 600; line-height: 1.25; }
+.mq-pick .m { font-family: ui-monospace, monospace; font-size: 10px; color: #5E6A7D; margin-top: 2px; }
+.mq-pick .w { font-size: 11.5px; color: #8E9AAD; margin-top: 4px; }
+
+.mq-console { border: 1px solid #28313F; border-radius: 8px; background: #0C1017; overflow: hidden; }
+.mq-console-head { display: flex; align-items: center; gap: 8px; padding: 9px 11px; width: 100%;
+  background: none; border: 0; cursor: pointer; color: inherit; font-family: inherit; text-align: left; }
+.mq-label { font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: #5E6A7D; }
+.mq-step { display: grid; grid-template-columns: 78px 1fr; gap: 9px; padding: 7px 11px; align-items: start;
+  border-top: 1px dashed rgba(40,49,63,.7); }
+.mq-step .name { font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: .07em; color: #8E9AAD; }
+.mq-step .bar { display: block; height: 2px; border-radius: 1px; margin-top: 4px; background: #5E6A7D; }
+.mq-step[data-status="ok"] .bar { background: #57CFA0; }
+.mq-step[data-status="relaxed"] .bar, .mq-step[data-status="asking"] .bar { background: #F0C36B; }
+.mq-step[data-status="caught"] .bar, .mq-step[data-status="refused"] .bar, .mq-step[data-status="empty"] .bar { background: #E8616B; }
+.mq-step .detail { font-family: ui-monospace, monospace; font-size: 10.5px; line-height: 1.55; color: #8E9AAD; word-break: break-word; }
+.mq-step .detail b { color: #E8ECF3; font-weight: 500; }
+.mq-kv { display: block; }
+.mq-kv span { color: #5E6A7D; }
+
+.mq-foot { border-top: 1px solid #28313F; padding: 12px 18px; display: flex; gap: 8px; }
+.mq-foot input { flex: 1; background: #0C1017; border: 1px solid #28313F; border-radius: 8px;
+  padding: 10px 12px; color: #E8ECF3; font: inherit; font-size: 13.5px; }
+.mq-foot button { background: #FF7A3D; color: #120A06; font-weight: 600; padding: 0 16px;
+  border: 0; border-radius: 8px; font-size: 13.5px; cursor: pointer; font-family: inherit; }
+
+/* what the scan found on the host page */
+.mq-scan { border: 1px solid #28313F; border-radius: 8px; background: #0C1017; padding: 12px 13px; }
+.mq-scan h4 { margin: 0 0 6px; font-size: 12px; font-weight: 600; }
+.mq-scan ol { margin: 0; padding-left: 20px; font-size: 11.5px; color: #8E9AAD; line-height: 1.6; }
+.mq-scan .miss { color: #E8616B; font-size: 11.5px; }
+
+/* the row Marquee injects into the host page */
+.mq-row { margin: 28px 0; padding-left: var(--mq-pad-l, 40px); padding-right: var(--mq-pad-r, 40px);
+  font-family: var(--mq-font, "IBM Plex Sans", system-ui, sans-serif); }
+.mq-row-head { display: flex; align-items: baseline; gap: 10px; padding: 0 0 10px; }
+.mq-row-head h3 { margin: 0; color: #FF7A3D; font-family: inherit;
+  font-size: var(--mq-title-size, 19px); font-weight: var(--mq-title-weight, 600);
+  letter-spacing: var(--mq-title-spacing, 0); }
+.mq-row-head .note { font-family: ui-monospace, monospace; font-size: 10.5px; letter-spacing: .06em;
+  text-transform: uppercase; color: rgba(255,255,255,.45); }
+.mq-strip { display: flex; gap: 12px; overflow-x: auto; padding: 2px 0 10px; }
+/* The card is an anchor now: cmd-click and middle-click behave, and the status
+   bar shows where it goes before you commit to it. all: revert would otherwise
+   hand it the browser's default link colour and underline. */
+.mq-card { flex: 0 0 168px; width: 168px; display: flex; flex-direction: column; gap: 7px;
+  text-decoration: none; color: inherit; cursor: pointer; transition: transform .16s ease; }
+.mq-card:hover { transform: translateY(-3px); }
+.mq-card:hover .mq-art { border-color: rgba(255,122,61,.75); }
+.mq-card:focus-visible { outline: 2px solid #FF7A3D; outline-offset: 3px; border-radius: 8px; }
+.mq-card[data-mq-exact="false"] .mq-art::after {
+  content: "search"; position: absolute; top: 6px; right: 6px;
+  font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  padding: 2px 5px; border-radius: 4px; color: rgba(255,255,255,.82);
+  background: rgba(0,0,0,.55); }
+.mq-art { position: relative; aspect-ratio: 2/3; border-radius: 6px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,.14);
+  background: linear-gradient(var(--mq-angle, 140deg), var(--mq-g1, #333), var(--mq-g2, #111)); }
+.mq-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mq-art .mq-tt { font-family: inherit; position: absolute; left: 10px; right: 10px; bottom: 10px; color: #fff;
+  font-weight: 700; font-size: 15px; line-height: 1.05; text-shadow: 0 2px 14px rgba(0,0,0,.5); }
+.mq-card .t { font-size: 13px; color: rgba(255,255,255,.92); font-family: inherit; }
+.mq-card .w { font-size: 11px; color: #FF7A3D; line-height: 1.3; }
+.mq-flag { font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(255,255,255,.4); padding-top: 4px; }
+
+@media (max-width: 700px) { .mq-root { width: 100vw; } }
+
+/* The model loader sits beside the mode badge. It is visible only while the
+   model is off or has failed; once it is running the badge alone says so. */
+.mq-model {
+  appearance: none;
+  border: 1px solid var(--mq-line, #2A3444);
+  background: transparent;
+  color: var(--mq-mute, #9AA7B8);
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  padding: 5px 9px;
+  margin-left: 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mq-model:hover:not(:disabled) { color: var(--mq-paper, #E9EDF3); border-color: var(--mq-orange, #FF7A3D); }
+.mq-model:disabled { opacity: .55; cursor: default; }
+.mq-model[hidden] { display: none; }

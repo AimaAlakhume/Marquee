@@ -1,0 +1,92 @@
+{
+ "_note": "Pre-computed model outputs for four demo queries. IMPORTANT, and worth being exact about: these were produced by a large language model (Claude) at BUILD time, while the project was being written, and then frozen into this file. Nothing here is generated at runtime. The shipped extension makes no network call and holds no API key — a cached entry is a lookup keyed on the normalised sentence, and everything else falls through to the deterministic core in src/agent.js. The drawer badge says 'local mode' and the trace labels the ranking method, so the interface never implies a model answered when one did not. A live model path is designed for (the three-tier adapter in run()) and is not wired up.",
+ "find me a comforting 90 minute animated movie with great music for a rainy sunday": {
+  "parse": {
+   "format": "movie",
+   "genres": [
+    "Animation"
+   ],
+   "want_tags": [
+    "gentle",
+    "music-forward",
+    "comfort-watch",
+    "soothing"
+   ],
+   "runtime_max": 90,
+   "warmth_target": 5,
+   "energy_max": 2,
+   "confidence": 0.92
+  },
+  "order": [
+   "the-aristocats",
+   "the-jungle-book",
+   "beauty-and-the-beast",
+   "the-little-mermaid",
+   "winnie-the-pooh",
+   "aladdin"
+  ]
+ },
+ "something gripping no reality tv": {
+  "parse": {
+   "want_tags": [
+    "tense",
+    "serialized"
+   ],
+   "avoid_tags": [
+    "reality",
+    "competition"
+   ],
+   "energy_target": 5,
+   "confidence": 0.8
+  },
+  "order": [
+   "tokyo-revengers",
+   "vigilante",
+   "bleach-thousand-year-blood-war",
+   "the-worst-of-evil",
+   "summer-time-rendering",
+   "prison-break"
+  ]
+ },
+ "something fun before lunch": {
+  "parse": {
+   "want_tags": [
+    "comedic",
+    "gentle",
+    "short-runtime"
+   ],
+   "runtime_max": 100,
+   "warmth_target": 5,
+   "confidence": 0.75
+  },
+  "order": [
+   "the-emperors-new-groove",
+   "winnie-the-pooh",
+   "the-aristocats",
+   "bolt",
+   "the-jungle-book",
+   "toy-story"
+  ]
+ },
+ "funny movie for the three of us under 2 hours": {
+  "parse": {
+   "format": "movie",
+   "want_tags": [
+    "comedic",
+    "witty",
+    "ensemble"
+   ],
+   "runtime_max": 120,
+   "company": "group",
+   "confidence": 0.85
+  },
+  "order": [
+   "the-emperors-new-groove",
+   "zootopia",
+   "ratatouille",
+   "the-incredibles",
+   "turning-red",
+   "wreck-it-ralph"
+  ]
+ }
+}

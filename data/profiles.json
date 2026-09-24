@@ -1,0 +1,101 @@
+{
+ "schema_version": 2,
+ "note": "Profiles describe WHO IS WATCHING and shape ranking only. Child-appropriateness is deliberately not a profile: it is a mode that can be switched on for any of them, and a request can turn it on for itself. Safety that lives inside one persona is safety you lose the moment you pick another.",
+ "profiles": [
+  {
+   "id": "solo",
+   "display_name": "Just me",
+   "subtitle": "Solo, weeknights · anime + K-drama heavy",
+   "avatar_hue": 268,
+   "recent_history": [
+    {"id": "bleach-thousand-year-blood-war", "completed": true,  "when": "3 days ago"},
+    {"id": "moon-knight",                    "completed": false, "progress": 0.55, "when": "Tuesday"},
+    {"id": "call-it-love",                   "completed": false, "progress": 0.22, "when": "last weekend"},
+    {"id": "moving",                         "completed": true,  "when": "last week"},
+    {"id": "the-worst-of-evil",              "completed": true,  "when": "2 weeks ago"},
+    {"id": "summer-time-rendering",          "completed": true,  "when": "3 weeks ago"},
+    {"id": "tokyo-revengers",                "completed": false, "progress": 0.4, "when": "last night"},
+    {"id": "encanto",                        "completed": true,  "when": "last month"},
+    {"id": "soul",                           "completed": true,  "when": "last month"},
+    {"id": "dancing-with-the-stars",         "completed": false, "progress": 0.02, "when": "2 months ago", "abandoned": true},
+    {"id": "the-golden-bachelor",            "completed": false, "progress": 0.0,  "when": "never opened", "abandoned": true}
+   ],
+   "affinities": {
+    "genres":    {"Anime": 3.0, "Animation": 1.8, "Action": 1.0, "Drama": 0.8, "Thriller": 0.6, "Musical": 0.8, "Fantasy": 0.6},
+    "tone_tags": {"anime": 3.0, "k-drama": 2.8, "serialized": 1.0, "music-forward": 1.2, "emotional": 0.8, "gorgeous-animation": 1.0, "coming-of-age": 0.6},
+    "brands":    {"Star": 1.5, "Hulu on Disney+": 0.8, "Pixar": 0.5, "Disney": 0.3}
+   },
+   "avoid": {
+    "genres":    {"Reality": -4.0, "Competition": -3.5},
+    "tone_tags": {"reality": -4.0, "dance": -3.0, "competition": -3.0, "celebrity": -2.0, "dating": -2.0}
+   },
+   "hard_filters": {},
+   "stated_prefs": [
+    "Stop putting competition and dance shows in the hero.",
+    "Anime and Korean dramas should not be four rows down."
+   ]
+  },
+
+  {
+   "id": "movie-night",
+   "display_name": "Movie night",
+   "subtitle": "Friends over · optimise for the lowest veto",
+   "avatar_hue": 190,
+   "household": [
+    {"name": "Aima", "likes": ["anime", "k-drama", "music-forward"], "vetoes": ["reality", "dance"]},
+    {"name": "Deji", "likes": ["superhero", "needle-drops", "comedic"], "vetoes": ["subtitled", "slow-burn"]},
+    {"name": "Ren",  "likes": ["cozy-mystery", "witty", "low-stakes"], "vetoes": ["body-horror", "brutal", "grim"]}
+   ],
+   "recent_history": [
+    {"id": "agatha-all-along",             "completed": false, "progress": 0.3,  "when": "together, Friday"},
+    {"id": "x-men-97",                     "completed": false, "progress": 0.14, "when": "together, two Fridays ago"},
+    {"id": "only-murders-in-the-building", "completed": true,  "when": "together, last month"},
+    {"id": "thor-ragnarok",                "completed": true,  "when": "together, a while ago"},
+    {"id": "guardians-of-the-galaxy",      "completed": true,  "when": "together, twice"}
+   ],
+   "affinities": {
+    "genres":    {"Comedy": 2.0, "Adventure": 1.5, "Superhero": 1.5, "Action": 1.2, "Mystery": 1.2, "Animation": 0.8},
+    "tone_tags": {"witty": 2.0, "comedic": 1.8, "needle-drops": 1.5, "irreverent": 1.5, "ensemble": 1.2, "low-stakes": 1.0, "cozy-action": 1.0},
+    "brands":    {"Marvel": 1.2, "Hulu on Disney+": 0.8, "Pixar": 0.5}
+   },
+   "avoid": {
+    "genres":    {"Reality": -5.0, "Horror": -5.0},
+    "tone_tags": {"reality": -5.0, "dance": -4.0, "subtitled": -3.0, "slow-burn": -3.0, "body-horror": -6.0, "brutal": -5.0, "grim": -4.0, "bleak": -4.0}
+   },
+   "hard_filters": {},
+   "group_rule": "lowest-veto",
+   "stated_prefs": [
+    "Nobody wants to sit through a veto.",
+    "Two hours max, we start late."
+   ]
+  },
+
+  {
+   "id": "date-night",
+   "display_name": "Date night",
+   "subtitle": "Two of us · warm, and not three hours long",
+   "avatar_hue": 340,
+   "recent_history": [
+    {"id": "elemental",        "completed": true,  "when": "together, last month"},
+    {"id": "soundtrack-1",     "completed": false, "progress": 0.5, "when": "together, Sunday"},
+    {"id": "ratatouille",      "completed": true,  "when": "together, twice"},
+    {"id": "the-greatest-showman", "completed": true, "when": "together"},
+    {"id": "avengers-endgame", "completed": false, "progress": 0.1, "when": "abandoned, too long", "abandoned": true}
+   ],
+   "affinities": {
+    "genres":    {"Romance": 2.6, "Comedy": 1.6, "Musical": 1.4, "Drama": 0.8, "Fantasy": 0.6},
+    "tone_tags": {"romance": 2.4, "tender": 2.0, "witty": 1.4, "music-forward": 1.4, "warm": 1.2, "gentle": 1.0, "slow-burn": 0.8, "sun-drenched": 0.8},
+    "brands":    {"Pixar": 0.8, "Hulu on Disney+": 0.6, "Star": 0.5, "Disney": 0.5}
+   },
+   "avoid": {
+    "genres":    {"Horror": -5.0, "Reality": -4.0, "Documentary": -1.5},
+    "tone_tags": {"body-horror": -6.0, "brutal": -5.0, "grim": -4.0, "bleak": -4.0, "very-long": -3.0, "anxiety-inducing": -3.0, "war-film": -2.5, "preschool-safe": -2.0}
+   },
+   "hard_filters": {},
+   "stated_prefs": [
+    "Nothing bleak, and nothing that needs three hours.",
+    "Something we can actually talk about afterwards."
+   ]
+  }
+ ]
+}

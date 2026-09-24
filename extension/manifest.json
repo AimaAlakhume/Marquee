@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Marquee — viewing concierge (student concept)",
+  "version": "0.1.0",
+  "description": "An unofficial student concept: an agent that reads the rows on a streaming home page and builds you one that fits what you actually asked for.",
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Marquee — open the concierge"
+  },
+  "permissions": [
+    "storage",
+    "offscreen"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.disneyplus.com/*",
+        "https://disneyplus.com/*",
+        "file:///*"
+      ],
+      "js": [
+        "data.js",
+        "agent.js",
+        "llm.js",
+        "panel.js"
+      ],
+      "css": [
+        "panel.css"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false,
+      "_comment_matches": "file:///* is for the offline fixture at build/fixtures/mock-home.html. It does nothing until you tick 'Allow access to file URLs' on chrome://extensions, which is off by default."
+    }
+  ],
+  "host_permissions": [
+    "https://huggingface.co/*",
+    "https://*.huggingface.co/*",
+    "https://*.hf.co/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "minimum_chrome_version": "119",
+  "_comment_model": "The on-device model is off until the user loads it. It runs in offscreen.html because WebGPU is not available in an MV3 service worker. Weights are fetched once from the Hugging Face CDN and cached by the browser; nothing is uploaded."
+}
