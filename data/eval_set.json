@@ -494,6 +494,60 @@
     "min_results": 2
    },
    "why": "A subject can be written down in two places: the Nature genre, or an `animals` tone tag on a title filed under Animation. A mood still cannot stand in for a genre — round 18 holds."
+  },
+  {
+   "id": "AGE4",
+   "group": "kids",
+   "profile": "movie-night",
+   "kids": true,
+   "input": "animated, adventure, about 90 minutes, great music, from 5 to 8, nothing sad",
+   "expect": {
+    "kind": "results",
+    "min_results": 3,
+    "cert_at_most": "TV-Y7",
+    "all_kid_safe": true,
+    "none_have_tags": [
+     "tense",
+     "nail-biting",
+     "grim",
+     "bleak"
+    ],
+    "none_titles": [
+     "Gargoyles",
+     "Marvel's Avengers"
+    ]
+   },
+   "why": "Reported from a live session. Gargoyles is rated TV-Y7, so no certificate rule was ever going to catch it — the rating says seven and up and the programme is a dark action series. A rating is a legal classification; the tone layer is the only thing here that describes what watching it is like, so the band needs an intensity ceiling as well as a rating ceiling."
+  },
+  {
+   "id": "AGE5",
+   "group": "kids",
+   "profile": "movie-night",
+   "kids": true,
+   "input": "something funny for 5 to 8",
+   "expect": {
+    "kind": "results",
+    "min_results": 2,
+    "cert_at_most": "TV-Y7",
+    "all_kid_safe": true
+   },
+   "why": "TV-PG was in the five-to-eight allow-list only because the band above it needed the rating. Parental guidance is not a rating you hand to a five-year-old unattended, and Steven Universe was arriving on the strength of it."
+  },
+  {
+   "id": "TONE1",
+   "group": "vocabulary",
+   "profile": "solo",
+   "input": "something tense",
+   "expect": {
+    "kind": "results",
+    "min_results": 3,
+    "none_have_tags": [
+     "gentle",
+     "comfort-watch",
+     "soothing"
+    ]
+   },
+   "why": "Thirty-eight derived titles were tagged \"tense, gentle\" at once, because a 22-minute episode length was being read as gentleness. A mood query means nothing while both halves of a contradiction are true."
   }
  ]
 }

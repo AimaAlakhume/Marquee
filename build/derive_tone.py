@@ -58,6 +58,11 @@ GENRE_TONE = {
     "Soap":            (2, 4), "Talk":        (2, 4), "War & Politics": (4, 2),
 }
 
+# Tags that describe strain. They cancel the calm ones, and a children's action
+# cartoon should not collect them from its genre list alone.
+TENSION = ("tense", "nail-biting", "dread", "grim", "bleak", "brutal",
+           "unsettling", "anxiety-inducing", "uneasy")
+
 GENRE_TAGS = {
     "Comedy": ["comedic"], "Family": ["gentle"],
     "Horror": ["tense", "grim"], "Thriller": ["tense", "nail-biting"],
@@ -112,7 +117,7 @@ NOT_FOR_KIDS = (
 def clamp(n, lo=1, hi=5):
     return max(lo, min(hi, int(round(n))))
 
-def derive(genres, keywords, cert, runtime, language, year, vote, title=""):
+def derive(genres, keywords, cert, runtime, language, year, vote, title="", kind=""):
     """Returns (energy, warmth, tone_tags, kid_safe). Genres arrive normalized."""
     gs = [g for g in genres if g in GENRE_TONE]
     if gs:
@@ -122,8 +127,16 @@ def derive(genres, keywords, cert, runtime, language, year, vote, title=""):
         energy, warmth = 3.0, 3.0
 
     tags = []
+    # Round 13: Action in a children's cartoon is not tension. Kim Possible and
+    # Gargoyles both carry Action; the one made for children also carries Family,
+    # and that is the only signal in the data that separates them.
+    family_action = (any(g in ("Family", "Kids") for g in genres)
+                     and any(g in ("Action", "Adventure", "Action & Adventure") for g in genres))
     for g in genres:
-        tags.extend(GENRE_TAGS.get(g, []))
+        for t in GENRE_TAGS.get(g, []):
+            if family_action and t in TENSION:
+                continue
+            tags.append(t)
 
     kw = " ".join(keywords).lower()
     for needles, de, dw, kt in KEYWORD_RULES:
@@ -135,7 +148,9 @@ def derive(genres, keywords, cert, runtime, language, year, vote, title=""):
     # A feature over two and a half hours asks more of a viewer than a 90-minute one.
     if runtime and runtime >= 150:
         tags.append("slow-burn")
-    if runtime and runtime <= 25:
+    # Round 13: this was written for Pixar shorts and was firing on every
+    # 22-minute television episode, which is how Gargoyles came to be gentle.
+    if kind == "short" and runtime and runtime <= 25:
         tags.append("gentle")
 
     if year and year <= 1990:
@@ -166,10 +181,11 @@ def derive(genres, keywords, cert, runtime, language, year, vote, title=""):
     # opposite directions often enough that the first version handed Re:Zero
     # "gentle, grim, bleak" and CSI "grim, comfort-watch" — tags that cancel each
     # other out and make a mood query meaningless.
-    if {"grim", "bleak"} & set(tags):
+    # Round 13: the first version of this only covered grim and bleak, so "tense"
+    # and "nail-biting" walked straight past it and 38 titles ended up tagged
+    # "tense, gentle" — a pair that makes a mood query meaningless.
+    if set(TENSION) & set(tags):
         tags = [t for t in tags if t not in ("gentle", "comfort-watch", "soothing")]
-    if "tense" in tags:
-        tags = [t for t in tags if t != "soothing"]
 
     seen, ordered = set(), []
     for t in tags:

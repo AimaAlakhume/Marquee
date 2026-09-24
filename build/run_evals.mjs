@@ -37,6 +37,10 @@ function check(res, e, profile) {
     for (const i of R) if (i.genres.includes(e[key])) fails.push(`${i.title} IS ${e[key]}`);
   }
   if (e.none_have_tag) for (const i of R) if (has(i, e.none_have_tag)) fails.push(`${i.title} is tagged ${e.none_have_tag}`);
+  if (e.none_have_tags) for (const i of R) for (const t of e.none_have_tags)
+    if (has(i, t)) fails.push(`${i.title} is tagged ${t}`);
+  if (e.none_titles) for (const i of R) for (const t of e.none_titles)
+    if (i.title.toLowerCase().includes(t.toLowerCase())) fails.push(`${i.title} should not be here`);
   if (e.cert_at_most) for (const i of R) if (CERT[i.certification] > CERT[e.cert_at_most]) fails.push(`${i.title} is ${i.certification}`);
   if (e.none_completed) {
     const done = new Set((profile.recent_history || []).filter(h => h.completed).map(h => h.id));

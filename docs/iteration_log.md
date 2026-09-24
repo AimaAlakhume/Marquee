@@ -417,3 +417,126 @@ filter is the hardest kind to trust and the hardest kind to debug.
 This does not re-couple safety to a persona, which round 18 was about. Kids mode is still
 a toggle with its own filter, off the relaxation ladder. It is simply shown where it can
 apply.
+
+## Round 13 — a rating is not an audience, again
+
+**Reported from a live session.** "animated, adventure, about 90 minutes, great
+music, from 5 to 8, nothing sad" returned **Gargoyles** — a 1994 action series
+that is not for a five-year-old.
+
+The obvious suspect was the certificate filter, and the obvious suspect was
+wrong. The programme is rated **TV-Y7**, which is inside the five-to-eight
+allow-list and always should have been: the rating says seven and up. No
+certificate rule was ever going to catch this. The rating is a legal
+classification. It does not describe what watching the thing is like.
+
+Three defects, found by pulling on that thread:
+
+**1. An episode length was being read as a mood.** `derive_tone.py` appended
+`gentle` to anything running 25 minutes or less. That rule was written for Pixar
+shorts and had been firing on every 22-minute television episode since the
+harvest. The tag list for Gargoyles held `tense` and `gentle` at the same time, and so
+did the one for *Bleach*, and the one for *Jurassic World*, which is neither.
+
+**2. Tension and gentleness were both true at once.** Round 11 taught the
+derivation that `grim` and `bleak` cancel `gentle` — and stopped there. `tense`
+and `nail-biting` walked straight past it. 38 derived titles carried a
+contradiction, which is enough to make any mood query meaningless.
+
+**3. Action in a children's cartoon is not tension.** Kim Possible and Gargoyles
+both carry the `Action` genre, and both were tagged `tense` because of it. The
+one made for children also carries `Family`, and that turned out to be the only
+signal in the data that separates them.
+
+Fixed in `build/derive_tone.py`, and applied to the existing catalogue by
+`build/repair_tone.py` — the harvest stored the derived tags rather than the
+keywords behind them, so the correction had to be made in place. 38 titles
+changed, all in the derived tier; the 115 audited titles were not touched.
+
+Then two changes in retrieval:
+
+- **TV-PG left the five-to-eight band.** It was in the list only because the
+  band above it needed the rating. *Steven Universe* was arriving on the strength
+  of that, for a five-year-old.
+- **Age bands gained an intensity ceiling.** `avoid_tags` sits beside `certs`
+  inside `retrieve()`, off the relaxation ladder, so a band now has a rating
+  ceiling *and* a tone ceiling. With the contradictions cleared, `tense` means
+  tense: the rule drops Gargoyles and Marvel's Avengers from the kid pool and
+  leaves Craig of the Creek, Kim Possible, Amphibia and Star vs. the Forces of
+  Evil exactly where they were.
+
+Three cases added: **AGE4** (the reported query, by name), **AGE5** (TV-PG stays
+out of five-to-eight), **TONE1** (nothing tense is also gentle). **42/42.**
+
+The pattern holds for the thirteenth time: the model was running when this was
+reported, and the model had nothing to do with it. The defect was in the data
+and in the filter.
+
+## Round 14 — the panel contradicted itself
+
+**Reported from a live session, with the model running.** The panel said
+*"Nothing in my data mentions 'mythical', so that went unused"* — and then
+returned good mythical results, because the model had read the word and turned
+it into `mythic` and `folklore`.
+
+Both halves were true of different layers, which is exactly why it read as a
+bug. `unknown_terms` is written by the deterministic parse, before the model is
+consulted, and nothing afterwards ever revisited it. So a word the model had
+just resolved was still sitting in the "not understood" list when the notice was
+drawn.
+
+The tempting fix was to delete the notice. That would have been the wrong one:
+the vocabulary report is the part of this interface that admits what the system
+cannot do, and a demo that only ever succeeds is a demo that lies when it fails.
+The report was not wrong to exist. It was wrong about what had happened.
+
+So the model now returns `resolved_terms` — the words from the sentence it
+actually turned into a genre or a tag — and the partition in `run()` moves those
+into a third bucket. The notice reads *"My own lexicon has no entry for
+'mythical' — the on-device model read it and I used what it returned."*
+
+Two guards on that, because a field that silences a warning is worth distrusting:
+
+- A term only counts if the user actually typed it. `mergeParse` intersects
+  `resolved_terms` with the words the deterministic parse flagged as unknown, so
+  a model naming something nobody said cannot suppress anything.
+- `resolved_terms` can only move a word from "unused" to "read by the model". It
+  cannot add a filter, and it cannot reach `company` or `age_band`, which are
+  still not in the model's schema at all.
+
+New: `build/test_model_seam.mjs`, six cases run against a stub adapter rather
+than a 2.3GB download. It covers this round's behaviour and pins the three
+safety claims the README makes — the model cannot widen an age band, an invented
+ID never reaches the screen, and a model that throws costs nothing. **6/6**,
+alongside **42/42** on the main suite.
+
+## Round 15 — the guardrail worked and the trace was unreadable
+
+Spotted in a screenshot of a live run. The VALIDATE step reported nine dropped
+answers and listed them as `energy 3, energy 2, energy 4, energy 3…`.
+
+Nothing was broken. That is the guardrail doing its job, out loud: the model's
+re-ranked list failed validation, every value was dropped, and the deterministic
+order stood. The step below it says `deterministic only`, which is the correct
+outcome. But two things were wrong around it.
+
+**The prompt invited the mistake.** Candidates were being written as
+`craig-of-the-creek · Craig of the Creek · energy 3 · warmth 5 · comedic, gentle`.
+A three-billion-parameter model reading a row of interchangeable separators
+picked the wrong field and returned `energy 3` as an ID. A bigger model would
+probably have coped, which is exactly why it is worth fixing rather than
+excusing: the prompt was ambiguous and the model was not wrong to be confused.
+Each line now reads `id=craig-of-the-creek  (Craig of the Creek; energy 3/5,
+warmth 5/5; comedic, gentle)`, and the instruction says to copy what follows
+`id=`. The adapter also intersects whatever comes back with the shortlist it
+offered, so a misread never travels further than the function that caused it.
+
+**The trace was shouting.** Nine fragments printed in full turned the one step
+that proves the safety net into the least readable thing on screen. It now shows
+the first few in quotes, the count, and a sentence saying what actually happened
+to the ordering.
+
+Worth saying plainly, because it is the whole argument of this project in one
+screenshot: a model returned nonsense, and nothing reached the viewer. The
+titles on the page were chosen by the deterministic ranker, exactly as they
+would have been with the model switched off.

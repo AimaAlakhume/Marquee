@@ -741,9 +741,16 @@ const AgentCore = (() => {
           let attempt = 0, v = validateIds(order, catalog);
           while (!v.kept.length && attempt < MAX_VALIDATE_RETRIES) { attempt++; v = validateIds(order, catalog); }
           if (v.dropped.length) {
+            // Round 15: a small model misreading the prompt can return dozens of
+            // fragments, and printing all of them made the trace unreadable at
+            // exactly the moment it is proving the guardrail works. Show a few,
+            // say how many, and say plainly what happened to the order.
             step("VALIDATE", "caught", {
-              dropped: v.dropped,
-              note: "not present in the catalog — dropped before display",
+              dropped: v.dropped.slice(0, 4).map(d => `\u201c${d}\u201d`),
+              count: v.dropped.length,
+              note: v.kept.length
+                ? `${v.dropped.length} of the model's answers are not catalogue entries — dropped before display`
+                : `none of the model's answers were catalogue entries — all dropped, deterministic order kept`,
             });
           }
           if (v.kept.length) {

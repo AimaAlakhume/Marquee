@@ -135,8 +135,13 @@ const MarqueeLLM = (() => {
 
   const RERANK_SYSTEM = [
     "You are given a request and a shortlist that has already been filtered.",
-    "Return the ids in a better order for that request, best first.",
-    "Return only ids from the list. Do not add, invent or explain anything.",
+    "Each line starts with id= followed by that title's id.",
+    "Return those ids in a better order for the request, best first.",
+    "",
+    "Copy each id exactly as it appears after id=. An id is lowercase words",
+    "joined by hyphens, like id=craig-of-the-creek.",
+    "Never return a word from the rest of the line. Never invent an id.",
+    "Return every id from the list, reordered. Do not explain anything.",
   ].join("\n");
 
   const RERANK_SCHEMA = {
@@ -248,7 +253,8 @@ const MarqueeLLM = (() => {
 
       async rerank(input, req, candidates) {
         const lines = candidates.map(c =>
-          `${c.id} · ${c.title} · energy ${c.energy} · warmth ${c.warmth} · ${(c.tone_tags || []).slice(0, 6).join(", ")}`
+          `id=${c.id}  (${c.title}; energy ${c.energy}/5, warmth ${c.warmth}/5; ` +
+          `${(c.tone_tags || []).slice(0, 6).join(", ")})`
         ).join("\n");
         const r = await send("chat", { args: {
           system: RERANK_SYSTEM,
@@ -257,7 +263,13 @@ const MarqueeLLM = (() => {
           maxTokens: 400,
         }});
         let o; try { o = JSON.parse(r.content); } catch (_) { return null; }
-        return Array.isArray(o && o.ids) ? o.ids.map(String) : null;
+        if (!Array.isArray(o && o.ids)) return null;
+        /* The shortlist is the only legal vocabulary here. Filtering to it in the
+           adapter keeps VALIDATE's report about real titles the model moved,
+           rather than a wall of fragments it misread off the prompt. */
+        const offered = new Set(candidates.map(c => c.id));
+        const kept = [...new Set(o.ids.map(String))].filter(id => offered.has(id));
+        return kept.length ? kept : null;
       },
     };
   }

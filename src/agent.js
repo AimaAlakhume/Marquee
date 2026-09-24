@@ -58,10 +58,34 @@ const AgentCore = (() => {
   // twelve-year-old, and those are not the same filter. The age answer sets an
   // explicit certificate allow-list — PG is parental guidance, which is not a
   // thing you hand to a four-year-old.
+  // Round 13. Two changes, both from one report: Gargoyles came back for a
+  // five-to-eight-year-old.
+  //
+  // TV-PG left the 5-to-8 band. "Parental guidance" is not a rating you hand to
+  // a five-year-old unattended, and it was in the list only because the band
+  // above it needed it.
+  //
+  // `avoid_tags` is new, and it is the part that actually fixed the report.
+  // Gargoyles is rated TV-Y7, so no certificate rule was ever going to catch it:
+  // the rating says seven and up and the programme is a dark action series. The
+  // certificate is a legal classification; the tone layer is the only thing in
+  // this data that describes what watching it is like. So the band now carries
+  // an intensity ceiling as well as a rating ceiling, and both sit inside
+  // retrieval, off the relaxation ladder, where prompt text cannot reach them.
+  const AGE_TENSION = ["tense", "nail-biting", "dread", "grim", "bleak", "brutal",
+                       "unsettling", "anxiety-inducing", "uneasy", "body-horror",
+                       "serial-killer", "paranoid-thriller", "war-film"];
   const AGE_BANDS = {
-    preschool: { label: "under 5",  certs: ["TV-Y", "TV-G", "G"], runtime_max: 90 },
-    young:     { label: "5 to 8",   certs: ["TV-Y", "TV-G", "G", "TV-Y7", "TV-PG"], runtime_max: 110 },
-    tween:     { label: "9 to 12",  certs: ["TV-Y", "TV-G", "G", "TV-Y7", "TV-PG", "PG"], runtime_max: 130 },
+    preschool: { label: "under 5", runtime_max: 90,
+                 certs: ["TV-Y", "TV-G", "G"],
+                 avoid_tags: AGE_TENSION },
+    young:     { label: "5 to 8", runtime_max: 110,
+                 certs: ["TV-Y", "TV-G", "G", "TV-Y7"],
+                 avoid_tags: AGE_TENSION },
+    tween:     { label: "9 to 12", runtime_max: 130,
+                 certs: ["TV-Y", "TV-G", "G", "TV-Y7", "TV-PG", "PG"],
+                 avoid_tags: ["grim", "bleak", "brutal", "body-horror",
+                              "serial-killer", "unsettling", "anxiety-inducing"] },
   };
   const AGE_RE = [
     [/\b(under\s*(five|5)\b|pre-?school|toddler|(three|four|3|4)[- ]year[- ]old)/i, "preschool"],
@@ -428,6 +452,7 @@ const AgentCore = (() => {
       if (band) {
         if (!band.certs.includes(item.certification)) return false;
         if (item.runtime > band.runtime_max) return false;
+        if ((band.avoid_tags || []).some(t => (item.tone_tags || []).includes(t))) return false;
       }
       if (hard.runtime_max && item.runtime > hard.runtime_max) return false;
       if (req.format && item.kind !== req.format) return false;
@@ -607,13 +632,20 @@ const AgentCore = (() => {
       // nothing would filter every result away; one that matches a large slice of
       // the catalogue is a common word doing no work. Both get reported instead.
       const MAX_SHARE = 0.15;
-      const searchable = [], ignored = [];
+      const searchable = [], ignored = [], byModel = [];
+      // Round 14: a word the model turned into real tags is not an unused word.
+      // The deterministic lexicon has no entry for "mythical", so it was reported
+      // as unused while the model was quietly resolving it to mythic and folklore
+      // and the results were good. Saying both things at once is just wrong.
+      const resolved = new Set((req.resolved_terms || []).map(t => t.toLowerCase()));
       for (const t of req.unknown_terms) {
+        if (resolved.has(t.toLowerCase())) { byModel.push(t); continue; }
         const hits = catalog.reduce((n, i) => n + (matchesText(i, [t]) ? 1 : 0), 0);
         (hits > 0 && hits <= Math.ceil(catalog.length * MAX_SHARE) ? searchable : ignored).push(t);
       }
       req.text_terms = searchable;
       req.ignored_terms = ignored;
+      req.model_terms = byModel;
     }
 
     step("PARSE", "ok", {
@@ -621,6 +653,7 @@ const AgentCore = (() => {
       request: summarizeRequest(req),
       confidence: Math.round(req.confidence * 100) / 100,
       read_literally: req.text_terms,
+      read_by_model: req.model_terms,
       not_understood: req.ignored_terms,
     });
 
@@ -639,7 +672,8 @@ const AgentCore = (() => {
       step("CLARIFY", "asking", { question: q.question, reason:
         `confidence ${Math.round(req.confidence * 100)}% · turn ${clarifyTurns + 1} of ${MAX_CLARIFY_TURNS}` });
       return { kind: "clarify", question: q, request: req, trace, clarifyTurns: clarifyTurns + 1,
-               readLiterally: req.text_terms, notUnderstood: req.ignored_terms };
+               readLiterally: req.text_terms, notUnderstood: req.ignored_terms,
+               readByModel: req.model_terms };
     }
     step("CLARIFY", "skipped", clarifyTurns >= MAX_CLARIFY_TURNS
       ? `turn cap reached (${MAX_CLARIFY_TURNS}) — proceeding on best guess`
@@ -687,6 +721,7 @@ const AgentCore = (() => {
     if (!pool.length) {
       return { kind: "empty", request: req, trace,
                readLiterally: req.text_terms, notUnderstood: req.ignored_terms,
+               readByModel: req.model_terms,
                message: "Nothing in the catalogue matches, even after relaxing everything I'm allowed to relax." };
     }
 
@@ -706,9 +741,16 @@ const AgentCore = (() => {
           let attempt = 0, v = validateIds(order, catalog);
           while (!v.kept.length && attempt < MAX_VALIDATE_RETRIES) { attempt++; v = validateIds(order, catalog); }
           if (v.dropped.length) {
+            // Round 15: a small model misreading the prompt can return dozens of
+            // fragments, and printing all of them made the trace unreadable at
+            // exactly the moment it is proving the guardrail works. Show a few,
+            // say how many, and say plainly what happened to the order.
             step("VALIDATE", "caught", {
-              dropped: v.dropped,
-              note: "not present in the catalog — dropped before display",
+              dropped: v.dropped.slice(0, 4).map(d => `\u201c${d}\u201d`),
+              count: v.dropped.length,
+              note: v.kept.length
+                ? `${v.dropped.length} of the model's answers are not catalogue entries — dropped before display`
+                : `none of the model's answers were catalogue entries — all dropped, deterministic order kept`,
             });
           }
           if (v.kept.length) {
@@ -750,6 +792,7 @@ const AgentCore = (() => {
       kind: "results", results, request: working, relaxed, trace,
       pivoted, blocked: hardBlocked,
       readLiterally: req.text_terms, notUnderstood: req.ignored_terms,
+               readByModel: req.model_terms,
       headline: buildHeadline({ req, relaxed, pivoted, blocked: hardBlocked, profile }),
       // Named from the ORIGINAL request. A row titled from the relaxed one would
       // quietly rename what the viewer asked for into whatever was left. When the
@@ -856,6 +899,12 @@ const AgentCore = (() => {
     out.genres     = [...new Set([...(base.genres||[]),     ...(extra.genres||[])])];
     out.want_tags  = [...new Set([...(base.want_tags||[]),  ...(extra.want_tags||[])])];
     out.avoid_tags = [...new Set([...(base.avoid_tags||[]), ...(extra.avoid_tags||[])])];
+    // Only words that are actually in the sentence count. A model naming a term
+    // the user never typed does not get to silence a vocabulary report.
+    const said = new Set((base.unknown_terms || []).map(t => t.toLowerCase()));
+    out.resolved_terms = [...new Set((extra.resolved_terms || [])
+      .map(t => String(t || "").trim().toLowerCase())
+      .filter(t => said.has(t)))];
     out.confidence = Math.min(0.98, Math.max(base.confidence, extra.confidence || 0) + 0.1);
     return out;
   }

@@ -3558,7 +3558,6 @@
   "tone_tags": [
    "tense",
    "emotional",
-   "gentle",
    "rewatchable",
    "anime"
   ],
@@ -3591,8 +3590,6 @@
   "warmth": 5,
   "tone_tags": [
    "tense",
-   "gentle",
-   "comfort-watch",
    "rewatchable",
    "anime"
   ],
@@ -3661,7 +3658,6 @@
   "warmth": 4,
   "tone_tags": [
    "tense",
-   "gentle",
    "rewatchable",
    "anime"
   ],
@@ -3697,7 +3693,6 @@
    "tearjerker",
    "emotional",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "Naruto Uzumaki, a mischievous adolescent ninja, struggles as he searches for recognition and dreams",
@@ -3730,7 +3725,6 @@
   "tone_tags": [
    "tense",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "After 2 and a half years Naruto finally returns to his village of Konoha, and sets about putting his",
@@ -3763,7 +3757,6 @@
   "tone_tags": [
    "tense",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "Follow the intergenerational feud between the Joestar Family and various forces of evil, the most pr",
@@ -3795,8 +3788,6 @@
   "warmth": 5,
   "tone_tags": [
    "tense",
-   "gentle",
-   "comfort-watch",
    "rewatchable",
    "anime"
   ],
@@ -3831,8 +3822,6 @@
   "tone_tags": [
    "tense",
    "emotional",
-   "gentle",
-   "comfort-watch",
    "rewatchable",
    "anime"
   ],
@@ -3865,7 +3854,6 @@
   "tone_tags": [
    "tense",
    "comedic",
-   "gentle",
    "rewatchable",
    "anime"
   ],
@@ -3898,8 +3886,6 @@
   "tone_tags": [
    "tense",
    "comedic",
-   "gentle",
-   "comfort-watch",
    "rewatchable",
    "anime"
   ],
@@ -3933,7 +3919,6 @@
   "tone_tags": [
    "comedic",
    "tense",
-   "gentle",
    "rewatchable"
   ],
   "overview": "The surreal misadventures of two best friends - a blue jay and a raccoon - as they seek to liven up",
@@ -4059,7 +4044,6 @@
    "tense",
    "nail-biting",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "For a chance at a pardon, a ninja assassin joins other condemned criminals on a journey to a mysteri",
@@ -4090,8 +4074,7 @@
   "energy": 4,
   "warmth": 4,
   "tone_tags": [
-   "gentle",
-   "tense"
+   "gentle"
   ],
   "overview": "Follow Peter Parker, Gwen Stacy and Miles Morales and their adventures as the young heroes team up w",
   "poster_url": "https://image.tmdb.org/t/p/w500/etO5jDS5WgR4Y1lTyXhQcilJ6u2.jpg",
@@ -4155,7 +4138,6 @@
    "comedic",
    "tense",
    "witty",
-   "gentle",
    "rewatchable"
   ],
   "overview": "Smart-mouthed superspy Sterling Archer and his dysfunctional team of secret agents turn dangerous mi",
@@ -4187,8 +4169,6 @@
   "warmth": 5,
   "tone_tags": [
    "tense",
-   "gentle",
-   "comfort-watch",
    "cerebral",
    "rewatchable",
    "anime"
@@ -4222,7 +4202,6 @@
   "energy": 3,
   "warmth": 4,
   "tone_tags": [
-   "tense",
    "comedic",
    "gentle",
    "rewatchable"
@@ -4256,7 +4235,6 @@
   "energy": 2,
   "warmth": 5,
   "tone_tags": [
-   "tense",
    "comedic",
    "gentle",
    "comfort-watch",
@@ -4998,8 +4976,7 @@
   "warmth": 3,
   "tone_tags": [
    "cerebral",
-   "tense",
-   "gentle"
+   "tense"
   ],
   "overview": "Revisit the epic heroes, villains and moments from across the MCU in preparation for the stories sti",
   "poster_url": "https://image.tmdb.org/t/p/w500/EpDuYIK81YtCUT3gH2JDpyj8Qk.jpg",
@@ -5299,7 +5276,6 @@
   "energy": 3,
   "warmth": 5,
   "tone_tags": [
-   "tense",
    "comedic",
    "gentle",
    "nostalgic",
@@ -5335,7 +5311,6 @@
   "energy": 1,
   "warmth": 5,
   "tone_tags": [
-   "tense",
    "comedic",
    "gentle",
    "comfort-watch",
@@ -5369,7 +5344,6 @@
   "energy": 3,
   "warmth": 4,
   "tone_tags": [
-   "tense",
    "comedic",
    "gentle",
    "rewatchable"
@@ -5402,7 +5376,6 @@
   "energy": 4,
   "warmth": 4,
   "tone_tags": [
-   "tense",
    "gentle",
    "rewatchable"
   ],
@@ -5774,7 +5747,6 @@
    "tense",
    "witty",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "Shadowbrokers are those who go unnoticed, posing as unremarkable people, when in truth, they control",
@@ -5808,8 +5780,6 @@
   "tone_tags": [
    "tense",
    "comedic",
-   "gentle",
-   "comfort-watch",
    "nostalgic",
    "anime"
   ],
@@ -6017,8 +5987,7 @@
    "comedic",
    "tense",
    "emotional",
-   "anime",
-   "gentle"
+   "anime"
   ],
   "overview": "Foiled by a hero when he’s inches away from conquering the world, the devil finds himself in modern-",
   "poster_url": "https://image.tmdb.org/t/p/w500/55jYHFT8iJuASF8Mzg0V8Dh3N3M.jpg",
@@ -6046,7 +6015,6 @@
   "warmth": 4,
   "tone_tags": [
    "tense",
-   "gentle",
    "slow-burn",
    "rewatchable"
   ],
@@ -6080,7 +6048,6 @@
   "tone_tags": [
    "tense",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "Anos Voldigord was a tyrannical Demon King that eradicated humans, spirits, and even the gods, but b",
@@ -6173,7 +6140,6 @@
   "warmth": 4,
   "tone_tags": [
    "comedic",
-   "tense",
    "gentle",
    "anime",
    "rewatchable"
@@ -6238,7 +6204,6 @@
    "tense",
    "emotional",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "Siblings Tatsuya and Miyuki enroll at Magic High School, where Miyuki's honors status comes between",
@@ -6582,7 +6547,6 @@
    "tense",
    "comedic",
    "anime",
-   "gentle",
    "rewatchable"
   ],
   "overview": "Mysteriously transformed into mini versions of themselves, Goku and his friends travel to the Demon",
@@ -6704,7 +6668,6 @@
   "tone_tags": [
    "tense",
    "emotional",
-   "gentle",
    "rewatchable",
    "anime"
   ],
@@ -6736,7 +6699,6 @@
   "warmth": 4,
   "tone_tags": [
    "tense",
-   "gentle",
    "rewatchable"
   ],
   "overview": "In Scotland, 994 A.D. Goliath and his clan of gargoyles defend a medieval castle. In present day, Da",
@@ -6772,8 +6734,7 @@
    "tense",
    "nail-biting",
    "witty",
-   "anime",
-   "gentle"
+   "anime"
   ],
   "overview": "This is a world of magic where magic is used for everything. But deep in the forest exists a young m",
   "poster_url": "https://image.tmdb.org/t/p/w500/hfSh6ISwUvtvihITPMK6TPOWarK.jpg",
@@ -6807,8 +6768,6 @@
    "tense",
    "cerebral",
    "slow-burn",
-   "gentle",
-   "comfort-watch",
    "nail-biting"
   ],
   "overview": "Reach the top, and everything will be yours. At the top of the tower exists everything in this world",
@@ -6839,7 +6798,6 @@
   "warmth": 4,
   "tone_tags": [
    "tense",
-   "gentle",
    "rewatchable"
   ],
   "overview": "The further adventures of the Marvel Universe's mightiest general membership superhero team. With an",
@@ -6898,7 +6856,6 @@
   "energy": 2,
   "warmth": 5,
   "tone_tags": [
-   "tense",
    "comedic",
    "gentle",
    "comfort-watch",
@@ -7370,8 +7327,7 @@
   "warmth": 4,
   "tone_tags": [
    "tense",
-   "nail-biting",
-   "gentle"
+   "nail-biting"
   ],
   "overview": "Three years after Jurassic World was destroyed, Isla Nublar now sits abandoned. When the island's do",
   "poster_url": "https://image.tmdb.org/t/p/w500/x2Us3jR6ToMJjbcPbLimYoxf6xr.jpg",
@@ -7430,8 +7386,7 @@
   "warmth": 4,
   "tone_tags": [
    "tense",
-   "nail-biting",
-   "gentle"
+   "nail-biting"
   ],
   "overview": "Twenty-two years after the events of Jurassic Park, Isla Nublar now features a fully functioning din",
   "poster_url": "https://image.tmdb.org/t/p/w500/rhr4y79GpxQF9IsfJItRXVaoGs4.jpg",

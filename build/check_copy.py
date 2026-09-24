@@ -24,6 +24,7 @@ ALLOW = {
     "eval", "evals", "Marvel", "pre", "de", "wordmark", "Synapse", "korean", "shōnen",
     "Aima", "Alakhume", "json", "Ragnarok", "Thor",
     "READMEs", "textstat", "LanguageTool",
+    "WebLLM", "WebGPU", "MLC",
 }
 
 def strip_md(text):

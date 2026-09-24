@@ -18,7 +18,7 @@ async def main():
         await pg.wait_for_timeout(600)
 
         await pg.add_style_tag(content=read("panel.css"))
-        for f in ("data.js", "agent.js", "panel.js"):
+        for f in ("data.js", "agent.js", "llm.js", "panel.js"):
             await pg.add_script_tag(content=read(f))
         await pg.wait_for_timeout(900)
 
